@@ -31,14 +31,17 @@ thread_function:
     push    rbp
     mov     rbp, rsp
     sub     rsp, 16
+    
+    ; Save the thread number (passed in rdi) before we overwrite it
+    push    rdi
 
     ; Print message with thread number
 %ifdef __LINUX__
     lea     rdi, [rel message]
-    mov     rsi, rdi        ; Thread number is passed directly
+    pop     rsi             ; Restore thread number as second argument
     call    printf
 %else
-    mov     rsi, rdi        ; Thread number is passed directly
+    pop     rsi             ; Restore thread number as second argument
     lea     rdi, [rel message]
     xor     eax, eax
     call    _printf

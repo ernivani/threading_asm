@@ -22,8 +22,11 @@ ifeq ($(UNAME), Linux)
     LDFLAGS = $(CFLAGS) -no-pie  # Disable position-independent executable
 else ifeq ($(UNAME), Darwin)
     ifeq ($(ARCH), arm64)
-        ASM_FLAGS = -f macho64 -D__MACOS__ --target=arm64-apple-darwin
-        LDFLAGS = $(CFLAGS) -arch arm64
+        ASM_FLAGS = -f macho64 -D__MACOS__
+        LDFLAGS = $(CFLAGS)
+        # Prefix commands with arch -x86_64 for arm64
+        CC := arch -x86_64 $(CC)
+        NASM := arch -x86_64 $(NASM)
     else
         ASM_FLAGS = -f macho64 -D__MACOS__
         LDFLAGS = $(CFLAGS)
@@ -44,4 +47,7 @@ $(OBJ): $(SRC)
 clean:
 	rm -f $(OBJ) $(OUTPUT)
 
-.PHONY: all clean
+run: $(OUTPUT)
+	./$(OUTPUT)
+
+.PHONY: all clean run

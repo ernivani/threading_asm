@@ -19,7 +19,7 @@ OBJ = projet_asm/main.o
 # Platform-specific settings
 ifeq ($(UNAME), Linux)
     ASM_FLAGS = -f elf64 -D__LINUX__
-    LDFLAGS = $(CFLAGS)
+    LDFLAGS = $(CFLAGS) -no-pie  # Disable position-independent executable
 else ifeq ($(UNAME), Darwin)
     ifeq ($(ARCH), arm64)
         ASM_FLAGS = -f macho64 -D__MACOS__ --target=arm64-apple-darwin
